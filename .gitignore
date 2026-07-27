@@ -3,5 +3,3 @@ __pycache__/
 *.pyc
 .deepeval*
 .DS_Store
-KONSPEKT.md
-GLOSSARY.md
