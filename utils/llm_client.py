@@ -13,20 +13,23 @@ client = OpenAI(
 
 
 def send(user_message, history=None):
-    """Отправляет сообщение агенту через OpenRouter, возвращает текст ответа и обновлённую историю."""
+    """Отправляет сообщение агенту через OpenRouter, возвращает текст ответа и обновлённую историю"""
     messages = [{"role": "system", "content": SYSTEM_PROMPT}] + (history or []) + [
         {"role": "user", "content": user_message}
     ]
 
-    response = client.chat.completions.create( # отправляем запрос модели
+    response = client.chat.completions.create( # отправляю запрос модели
         model=MODEL,
         messages=messages,
     )
 
-    text = response.choices[0].message.content # берем текст ответа агента
+    text = response.choices[0].message.content # беру текст ответа агента
+    if text is None: # проверяю что ответ не пустой, если пустой то вызываю ошибку
+        raise ValueError("llm_client: модель вернула пустой ответ (content is None)")
+
     updated_history = (history or []) + [
         {"role": "user", "content": user_message},
         {"role": "assistant", "content": text},
     ]
 
-    return {"text": text, "history": updated_history} 
+    return {"text": text, "history": updated_history}
