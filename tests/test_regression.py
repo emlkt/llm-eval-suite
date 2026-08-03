@@ -23,7 +23,7 @@ def test_regression(case):
         response = llm_client.send(p, history)
         history = response["history"]
 
-    turns = [Turn(role=h["role"], content=h["content"] ) for h in history] # переписываю историю общения в формате который понимает deepeval
+    turns = [Turn(role=h["role"], content=h["content"] ) for h in history] # тут переписываю историю общения в формате который понимает deepeval
 
     assert validators.contains_keywords(
         response["text"],
@@ -34,7 +34,7 @@ def test_regression(case):
 
     case_metric = ConversationalGEval(
         name=f"Regression Quality - {case['id']}",
-        criteria="Оцени, насколько уместно и по существу ответы бота (assistant) отвечают на вопросы клиента (user) в этом диалоге, в контексте поддержки интернет-магазина",
+        criteria="Оцени, насколько уместно и по существу ответы бота (assistant) отвечают на вопросы клиента (user) в этом диалоге, в контексте поддержки интернет-магазина. Не штрафуй за краткость, если сообщение всего одно.",
         evaluation_params=[MultiTurnParams.CONTENT],
         threshold=case["min_score"] /5,
         model=judge_model,
